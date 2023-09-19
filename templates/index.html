@@ -18,10 +18,11 @@
     </ul>
 
     <h2>Upload de Arquivo</h2>
-    <form method="POST" enctype="multipart/form-data" action="/upload">
-        <input type="file" name="arquivo">
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="arquivos" multiple>
         <input type="text" name="informacoes" placeholder="Informações adicionais">
         <input type="submit" value="Enviar">
     </form>
-</body>
+    
+</body>  
 </html>

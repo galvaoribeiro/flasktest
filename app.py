@@ -4,6 +4,7 @@ import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///uploads.db'  # Usando SQLite para simplicidade
+app.config['UPLOAD_FOLDER'] = 'uploads'  # Pasta para armazenar os arquivos enviados
 db = SQLAlchemy(app)
 
 class Arquivo(db.Model):
@@ -18,16 +19,17 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    arquivo = request.files['arquivo']
     informacoes = request.form.get('informacoes')
+    arquivos = request.files.getlist('arquivos')  # Obter lista de arquivos
 
-    if arquivo:
-        nome_arquivo = arquivo.filename
-        arquivo.save(os.path.join('uploads', nome_arquivo))
+    for arquivo in arquivos:
+        if arquivo:
+            nome_arquivo = arquivo.filename
+            arquivo.save(os.path.join(app.config['UPLOAD_FOLDER'], nome_arquivo))
 
-        novo_arquivo = Arquivo(nome=nome_arquivo, informacoes=informacoes)
-        db.session.add(novo_arquivo)
-        db.session.commit()
+            novo_arquivo = Arquivo(nome=nome_arquivo, informacoes=informacoes)
+            db.session.add(novo_arquivo)
+            db.session.commit()
 
     return redirect(url_for('index'))
 
@@ -35,7 +37,7 @@ def upload():
 def excluir(id):
     arquivo = Arquivo.query.get(id)
     if arquivo:
-        os.remove(os.path.join('uploads', arquivo.nome))
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], arquivo.nome))
         db.session.delete(arquivo)
         db.session.commit()
 
