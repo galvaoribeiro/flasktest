@@ -1,8 +1,35 @@
-<p> Essa página vai subir um arquivo </p>
+<h1> Essa pagina vai subir um arquivo </h1>
 
-
-<form action="processar-arquivo.php" method="post" enctype="multipart/form-data">
-    <label for="arquivo">Selecione um arquivo:</label>
-    <input type="file" name="arquivo" id="arquivo">
+<form id="formulario-upload" action="processar-arquivo.php" method="post" enctype="multipart/form-data">
+    <input type="file" name="arquivo">
     <input type="submit" value="Enviar Arquivo">
 </form>
+
+<div id="mensagem-resposta"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#formulario-upload").submit(function(event) {
+        event.preventDefault(); // Impede o envio tradicional do formulário
+        
+        // Cria um objeto FormData para enviar os dados do formulário
+        var formData = new FormData(this);
+        
+        $.ajax({
+            url: "processar-arquivo.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // Exibe a mensagem de sucesso na página sem redirecionar
+                $("#mensagem-resposta").html(response);
+            },
+            error: function() {
+                alert("Ocorreu um erro ao processar o arquivo.");
+            }
+        });
+    });
+});
+</script>

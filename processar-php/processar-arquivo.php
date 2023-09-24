@@ -1,17 +1,13 @@
 <?php
+// Caminho para o arquivo wp-load.php
+$wp_load_path = '/home2/legalt39/public_html/wp-load.php'; // Substitua pelo caminho correto
 
-    // Caminho para o arquivo wp-load.php
-    $wp_load_path = 'wp-load.php'; // Substitua pelo caminho correto
-    
-    // Verifica se o arquivo wp-load.php existe
-    if (file_exists($wp_load_path)) {
-        require_once($wp_load_path);
-    } else {
-        die('Erro: O arquivo wp-load.php não foi encontrado.');
+// Verifica se o arquivo wp-load.php existe
+if (file_exists($wp_load_path)) {
+    require_once($wp_load_path);
+} else {
+    die('Erro: O arquivo wp-load.php não foi encontrado.');
 }
-
-
-
 
 // Verifica se o formulário foi submetido
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -37,20 +33,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Caminho completo para o arquivo de destino
         $caminhoCompleto = $diretorioDestino . "/" . $nomeArquivoUnico;
 
-        // Move o arquivo para o diretório de destino
+        // Restante do código para processar o arquivo aqui
+
         if (move_uploaded_file($caminhoTemporario, $caminhoCompleto)) {
             // Arquivo carregado com sucesso
-            echo "Arquivo carregado com sucesso. Nome do arquivo: " . $nomeArquivoUnico;
+            $mensagem = "Arquivo carregado com sucesso. Nome do arquivo: " . $nomeArquivoUnico;
         } else {
             // Erro ao mover o arquivo
-            echo "Erro ao mover o arquivo para o diretório de destino.";
+            $mensagem = "Erro ao mover o arquivo para o diretório de destino.";
         }
     } else {
         // Ocorreu um erro durante o upload do arquivo
-        echo "Ocorreu um erro durante o upload do arquivo. Código de erro: " . $_FILES["arquivo"]["error"];
+        $mensagem = "Ocorreu um erro durante o upload do arquivo. Código de erro: " . $_FILES["arquivo"]["error"];
     }
-} else {
-    // Formulário não foi submetido
-    echo "O formulário não foi submetido corretamente.";
 }
+
+// Retorna a mensagem como uma resposta AJAX
+echo $mensagem;
 ?>
